@@ -1,0 +1,24 @@
+# Build
+*.js.map
+
+# Node
+*.log
+*.log.*
+node_modules/
+
+out/
+dist/
+code.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
