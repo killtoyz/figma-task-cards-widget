@@ -1,36 +1,30 @@
-Below are the steps to get your widget running. You can also find instructions at:
+# Виджет «Карточки задач»
+Настраиваемые карточки управления задачами в Figma
 
-https://www.figma.com/widget-docs/setup-guide/
+## Возможности
 
-This widget template uses TypeScript and NPM, two standard tools in creating JavaScript applications.
+- ✅ Добавление любого количества карточек задач с помощью всплывающего меню
+- 📝 Редактируемые поля заголовка, описания, деталей и даты
+- 🎨 Цветовая кодировка статусов (To do → In Progress → In Review → Done)
+- ⚙️ Переключение видимости всех элементов кроме заголовка (статус, детали, описание, дата)
+- 🔄 Динамическое добавление/удаление карточек с помощью всплывающего меню
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+## Установка
+### В Figma
+Найдите виджет с помощью поиска: Меню "Widgets" → "Plugins & Widgets"
 
-https://nodejs.org/en/download/
+1. Клонируйте репозиторий
+2. Установите зависимости: `npm install`
+3. Соберите виджет: `npm run build`
+4. Импортируйте в Figma: Меню "Widgets"»" → "Development" → "Import from manifest"
 
-Next, install TypeScript, esbuild and the latest type definitions by running:
+## Разработка
+```bash
+npm run watch  # Watch mode for development
+npm run build  # Production build
+```
 
-npm install
+## Tech Stack
+- TypeScript
+- Figma Widget API
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
-
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
-
-For more information, visit https://www.typescriptlang.org/
-
-Using TypeScript requires a compiler to convert TypeScript (widget-src/code.tsx) into JavaScript (dist/code.js)
-for the browser to run. We use esbuild to do this for us.
-
-We recommend writing TypeScript code using Visual Studio code:
-
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-   then select "npm: watch". You will have to do this again every time
-   you reopen Visual Studio Code.
-
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
