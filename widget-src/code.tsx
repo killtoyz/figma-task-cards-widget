@@ -1,7 +1,9 @@
 const { widget } = figma
 const { AutoLayout, Text, Input, Rectangle, useSyncedState, usePropertyMenu } = widget
 
+
 type CardStatus = 'To Do' | 'In Progress' | 'In Renew' | 'Done'
+
 
 interface Card {
   id: string
@@ -12,6 +14,7 @@ interface Card {
   details: string
 }
 
+
 interface Settings {
   showPlaceholder: boolean
   showDescription: boolean
@@ -20,12 +23,20 @@ interface Settings {
   showDetails: boolean
 }
 
+
 const STATUS_CONFIG: Record<CardStatus, { color: string; nextStatus: CardStatus }> = {
   'To Do': { color: '#FCCC88', nextStatus: 'In Progress' },
   'In Progress': { color: '#8CD0FD', nextStatus: 'In Renew' },
   'In Renew': { color: '#BDB0FF', nextStatus: 'Done' },
   'Done': { color: '#8DE2BE', nextStatus: 'To Do' }
 }
+
+
+// Функция проверки URL
+const isURL = (text: string): boolean => {
+  return /^https?:\/\/.+/.test(text.trim())
+}
+
 
 function Widget() {
   const [cards, setCards] = useSyncedState<Card[]>('cards', [
@@ -39,6 +50,7 @@ function Widget() {
     }
   ])
 
+
   const [settings, setSettings] = useSyncedState<Settings>('settings', {
     showPlaceholder: true,
     showDescription: true,
@@ -46,6 +58,7 @@ function Widget() {
     showDate: true,
     showDetails: true
   })
+
 
   // Menu (buttons and toggles)
   usePropertyMenu(
@@ -119,6 +132,7 @@ function Widget() {
     }
   )
 
+
   const toggleStatus = (cardId: string) => {
     setCards(cards.map(card => {
       if (card.id === cardId) {
@@ -128,11 +142,13 @@ function Widget() {
     }))
   }
 
+
   const updateTitle = (cardId: string, newTitle: string) => {
     setCards(cards.map(card => 
       card.id === cardId ? { ...card, title: newTitle } : card
     ))
   }
+
 
   const updateDescription = (cardId: string, newDescription: string) => {
     setCards(cards.map(card => 
@@ -140,17 +156,20 @@ function Widget() {
     ))
   }
 
+
   const updateDate = (cardId: string, newDate: string) => {
     setCards(cards.map(card => 
       card.id === cardId ? { ...card, date: newDate } : card
     ))
   }
 
+
   const updateDetails = (cardId: string, newDetails: string) => {
     setCards(cards.map(card => 
       card.id === cardId ? { ...card, details: newDetails } : card
     ))
   }
+
 
   const addCard = () => {
     const newCard: Card = {
@@ -164,11 +183,13 @@ function Widget() {
     setCards([...cards, newCard])
   }
 
+
   const removeCard = () => {
     if (cards.length > 1) {
       setCards(cards.slice(0, -1))
     }
   }
+
 
   return (
     <AutoLayout
@@ -215,6 +236,7 @@ function Widget() {
               </AutoLayout>
             )}
 
+
             {/* Details*/}
             <AutoLayout
               direction="horizontal"
@@ -237,6 +259,7 @@ function Widget() {
             </AutoLayout>
           </AutoLayout>
 
+
           {/* Placeholder for icon, illustration or img or smth... */}
           {settings.showPlaceholder && (
             <Rectangle
@@ -246,6 +269,7 @@ function Widget() {
               cornerRadius={8}
             />
           )}
+
 
           {/* Title */}
           <Input
@@ -260,6 +284,7 @@ function Widget() {
             inputBehavior="wrap"
           />
 
+
           {/* Task link or description & Date */}
           <AutoLayout
             direction="horizontal"
@@ -267,19 +292,38 @@ function Widget() {
             spacing={10}
           >
             {/* Task link or short description */}
-            {settings.showDescription && (
-              <Input
-                value={card.description}
-                placeholder="Short description"
-                onTextEditEnd={(e) => updateDescription(card.id, e.characters)}
+          {settings.showDescription && (
+            isURL(card.description) ? (
+              // if URL replace like "Link"
+              <Text
                 fontSize={20}
                 fontWeight={400}
                 fontFamily="Inter"
-                fill="#333333"
+                fill="#0066CC"
+                textDecoration="underline"
                 width={settings.showDate ? 550 : "fill-parent"}
-                inputBehavior="multiline"
-              />
+                onClick={() => {
+                  figma.openExternal(card.description.trim())
+                }}
+              >
+                Link
+              </Text>
+              ) : (
+                // if text
+                <Input
+                  value={card.description}
+                  placeholder="Short description or link"
+                  onTextEditEnd={(e) => updateDescription(card.id, e.characters)}
+                  fontSize={20}
+                  fontWeight={400}
+                  fontFamily="Inter"
+                  fill="#333333"
+                  width={settings.showDate ? 550 : "fill-parent"}
+                  inputBehavior="multiline"
+                />
+              )
             )}
+
 
             {/* Date */}
             <AutoLayout
@@ -307,5 +351,6 @@ function Widget() {
     </AutoLayout>
   )
 }
+
 
 widget.register(Widget)
